@@ -40,8 +40,6 @@
     (pprint hospital-silveira)))
 (teste-atomo)
 
-(println "Chega em malvado...")
-
 (defn chega-em-malvado! [hospital pessoa]
   (swap! hospital h.logic/chega-em-pausado-logando :espera pessoa)
   (println "3 - Apos inserir" pessoa))
@@ -63,11 +61,9 @@
 
 ; (simula-um-dia-em-paralelo-malvado)
 
-(println "----")
-
 (defn chega-em! [hospital pessoa]
   (swap! hospital h.logic/chega-em :espera pessoa)
-  (println "3 - Apos inserir" pessoa))
+  (println "Apos inserir pessoa" pessoa))
 
 (defn simula-um-dia-em-paralelo []
   (let [hospital (atom (h.model/novo-hospital))]
@@ -81,10 +77,100 @@
 
 ; (simula-um-dia-em-paralelo)
 
-(println "----")
-(let [nome (atom "Cesar")]
-  (println @nome)
-  (swap! nome str "Teste")
-  (println @nome)
-  (reset-vals! nome "Jose")
-  (println @nome))
+(defn printa-nomes []
+  (let [nome (atom "Cesar")]
+    (println @nome)
+    (swap! nome str "Teste")
+    (println @nome)
+    (reset-vals! nome "Jose")
+    (println @nome)))
+; (println printa-nomes)
+
+(defn simula-um-dia-em-paralelo-mapv []
+  (let [hospital (atom (h.model/novo-hospital))
+        pessoas ["cesar","paula","chico","bento","timao","frida"]
+        starta-thread #(.start (Thread. (fn [] (chega-em! hospital %))))]
+    (mapv starta-thread pessoas)
+    (.start (Thread. #(imprime-hospital hospital)))))
+
+; (simula-um-dia-em-paralelo-mapv)
+
+(defn start-thread
+  [hospital pessoas]
+  (.start (Thread. (fn [] (chega-em! hospital pessoas)))))
+
+(defn preparadinha
+  [hospital]
+  (fn [pessoas] (start-thread hospital pessoas)))
+
+(defn simula-um-dia-em-paralelo-refactor []
+  (let [hospital (atom (h.model/novo-hospital))
+        pessoas ["cesar","paula","chico","bento","timao","frida"]
+        starta (preparadinha hospital)]
+    (mapv starta pessoas)
+    (.start (Thread. #(imprime-hospital hospital)))))
+
+; (simula-um-dia-em-paralelo-refactor)
+
+(defn start-thread
+  ([hospital]
+   (fn [pessoas] (start-thread hospital pessoas)))
+  ([hospital pessoas]
+   (.start (Thread. (fn [] (chega-em! hospital pessoas))))))
+
+(defn simula-um-dia-em-paralelo-refactor []
+  (let [hospital (atom (h.model/novo-hospital))
+        pessoas ["cesar","paula","chico","bento","timao","frida"]
+        starta (start-thread hospital)]
+    (mapv starta pessoas)
+    (.start (Thread. #(imprime-hospital hospital)))))
+
+; (simula-um-dia-em-paralelo-refactor)
+
+(defn start-thread
+  [hospital pessoas]
+  (.start (Thread. (fn [] (chega-em! hospital pessoas)))))
+
+(defn simula-um-dia-em-paralelo-com-partial []
+  (let [hospital (atom (h.model/novo-hospital))
+        pessoas ["cesar","paula","chico","bento","timao","frida"]
+        starta (partial start-thread hospital)]
+    (mapv starta pessoas)
+    (.start (Thread. #(imprime-hospital hospital)))))
+
+;(simula-um-dia-em-paralelo-com-partial)
+
+
+
+
+
+
+
+(defn start-thread
+  [hospital pessoas]
+  (.start (Thread. (fn [] (chega-em! hospital pessoas)))))
+
+(defn simula-um-dia-em-paralelo-com-doseq []
+  (let [hospital (atom (h.model/novo-hospital))
+        pessoas ["cesar","paula","chico","bento","timao","frida"]]
+    (doseq [pessoa pessoas]
+      (start-thread hospital pessoa))
+    (.start (Thread. #(imprime-hospital hospital)))))
+
+; (simula-um-dia-em-paralelo-com-doseq)
+
+
+
+
+
+(defn start-thread
+  [hospital pessoas]
+  (.start (Thread. (fn [] (chega-em! hospital pessoas)))))
+
+(defn simula-um-dia-em-paralelo-com-dotimes []
+  (let [hospital (atom (h.model/novo-hospital))]
+    (dotimes [pessoa 6]
+      (start-thread hospital pessoa))
+    (.start (Thread. #(imprime-hospital hospital)))))
+
+(simula-um-dia-em-paralelo-com-dotimes)
