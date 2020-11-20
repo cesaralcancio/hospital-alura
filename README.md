@@ -4,10 +4,16 @@ A Clojure library designed to ... well, that part is up to you.
 
 ## Usage
 
-* This project was created using IntelliJ with plugin (Cursive) Leiningen using JDK 11.
+* This project was created using IntelliJ with plugin Cursive, que utiliza o motor Leiningen using JDK 11.
+* O nome do pluguin para baixar se chama "Cursive": https://plugins.jetbrains.com/plugin/8090-cursive
 * To run this code we use the REPL over the file project.clj
 * The REPL console will open and we can LOAD the file we are working with, so it will be executed.
 * This was based on Alura Clojure formação.
+
+## IntelliJ commands with Mac OS
+`shift + option + j` to remove from function  
+`shift + option + k` to add into the function  
+`shift + option + l` to run the code   
 
 ## License
 

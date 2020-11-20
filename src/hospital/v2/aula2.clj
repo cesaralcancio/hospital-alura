@@ -34,3 +34,34 @@
   (pprint (dev-assinar-pre-autorizacao? plano :raio-x 500))
   (pprint (dev-assinar-pre-autorizacao? plano :ultrasom 500))
   (pprint (dev-assinar-pre-autorizacao? plano :terapia 500)))
+
+
+
+(defprotocol Dateable
+  (to-ms [this]))
+
+(extend-type java.lang.Number
+  Dateable
+  (to-ms [this] 5))
+
+(pprint (to-ms 10))
+
+(extend-type java.util.Date
+  Dateable
+  (to-ms [this] (.getTime this)))
+
+(pprint (to-ms (java.util.Date.)))
+
+(extend-type java.util.Calendar
+  Dateable
+  (to-ms [this] (.getTimeInMillis this)))
+
+;(pprint (.getTimeInMillis (java.util.GregorianCalendar.)))
+
+(pprint (to-ms (java.util.GregorianCalendar.)))
+
+(extend-type java.lang.String
+  Dateable
+  (to-ms [this] (.length this)))
+
+(pprint (to-ms "Cesar Augusto"))
