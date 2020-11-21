@@ -11,9 +11,11 @@ A Clojure library designed to ... well, that part is up to you.
 * This was based on Alura Clojure formação.
 
 ## IntelliJ commands with Mac OS
-`shift + option + j` to remove from function  
-`shift + option + k` to add into the function  
-`shift + option + l` to run the code   
+* `shift + option + j` to remove from function  
+* `shift + option + k` to add into the function  
+* `shift + option + l` to run the code   
+* `shift + option + p` to run just the code you have been selected
+* What else?   
 
 ## License
 
