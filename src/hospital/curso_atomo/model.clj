@@ -1,4 +1,4 @@
-(ns hospital.model)
+(ns hospital.curso_atomo.model)
 
 (def empty-queue clojure.lang.PersistentQueue/EMPTY)
 

@@ -1,4 +1,4 @@
-(ns hospital.v2.model)
+(ns hospital.curso_record_protocol_multimethod.model)
 
 (defprotocol Dateable
   (to-ms [this]))

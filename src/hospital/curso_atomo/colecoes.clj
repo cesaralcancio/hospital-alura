@@ -1,4 +1,4 @@
-(ns hospital.colecoes
+(ns hospital.curso_atomo.colecoes
   (:use [clojure.pprint]))
 
 (defn testa-vetor []

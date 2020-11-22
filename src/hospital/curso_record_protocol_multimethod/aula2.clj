@@ -1,4 +1,4 @@
-(ns hospital.v2.aula2
+(ns hospital.curso_record_protocol_multimethod.aula2
   (:use clojure.pprint))
 
 ; Paciente Plano de Saude ===> + plano de saude

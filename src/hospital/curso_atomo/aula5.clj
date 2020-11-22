@@ -1,7 +1,7 @@
-(ns hospital.aula5
+(ns hospital.curso_atomo.aula5
   (:use [clojure.pprint])
-  (:require [hospital.logic :as h.logic]
-            [hospital.model :as h.model]))
+  (:require [hospital.curso_atomo.logic :as h.logic]
+            [hospital.curso_atomo.model :as h.model]))
 
 (defn fatorial [numero]
   (let [numero-menor (- numero 1)]

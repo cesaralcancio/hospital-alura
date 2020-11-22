@@ -1,6 +1,6 @@
-(ns hospital.v2.aula3
+(ns hospital.curso_record_protocol_multimethod.aula3
   (:use clojure.pprint)
-  (:require [hospital.v2.logica :as h.v2.logica]))
+  (:require [hospital.curso_record_protocol_multimethod.logica :as h.v2.logica]))
 
 (defn carrega-paciente [id]
   (println "Carregando" id)

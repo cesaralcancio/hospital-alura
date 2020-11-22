@@ -1,4 +1,4 @@
-(ns hospital.logic)
+(ns hospital.curso_atomo.logic)
 
 (defn cabe-na-fila? [hospital departamento]
   (-> hospital

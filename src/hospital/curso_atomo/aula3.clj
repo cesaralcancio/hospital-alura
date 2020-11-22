@@ -1,7 +1,7 @@
-(ns hospital.aula3
+(ns hospital.curso_atomo.aula3
   (:use [clojure pprint])
-  (:require [hospital.logic :as h.logic]
-            [hospital.model :as h.model]))
+  (:require [hospital.curso_atomo.logic :as h.logic]
+            [hospital.curso_atomo.model :as h.model]))
 
 (def nome "Cesar")
 (println nome)
@@ -174,3 +174,4 @@
     (.start (Thread. #(imprime-hospital hospital)))))
 
 (simula-um-dia-em-paralelo-com-dotimes)
+(pprint "Fim")

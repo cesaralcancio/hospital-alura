@@ -1,7 +1,7 @@
-(ns hospital.aula1
+(ns hospital.curso_atomo.aula1
   (:use [clojure pprint])
-  (:require [hospital.model :as h.model]
-            [hospital.logic :as h.logic]))
+  (:require [hospital.curso_atomo.model :as h.model]
+            [hospital.curso_atomo.logic :as h.logic]))
 
 (defn simula-um-dia []
   ; root binding

@@ -1,4 +1,4 @@
-(ns hospital.v2.aula1
+(ns hospital.curso_record_protocol_multimethod.aula1
   (:use clojure.pprint))
 
 (defn adiciona-paciente

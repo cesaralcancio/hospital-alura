@@ -1,6 +1,6 @@
-(ns hospital.aula6
+(ns hospital.curso_atomo.aula6
   (:use [clojure pprint])
-  (:require [hospital.model :as h.model]))
+  (:require [hospital.curso_atomo.model :as h.model]))
 
 
 (defn cabe-na-fila? [fila]
