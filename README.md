@@ -11,10 +11,15 @@ A Clojure library designed to ... well, that part is up to you.
 * This was based on Alura Clojure formação.
 
 ## IntelliJ commands with Mac OS
-* `shift + option + j` to remove from function  
-* `shift + option + k` to add into the function  
-* `shift + option + l` to run the code   
+* `shift + option + j` to remove from function
+* `shift + option + k` to add into the function
+* `shift + option + l` to run the code
 * `shift + option + p` to run just the code you have been selected
+* `option + command + l` to ident code
+* `command + shift + n` to search file
+* With the REPL running go to `Tools -> REPL -> Run Tests in Current NS in REPL` to run tests
+* I personally added this mapkey/shortcut to `option + control + shift + l` to run 
+* `command + /` to comment
 * What else?   
 
 ## License
