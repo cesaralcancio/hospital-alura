@@ -58,7 +58,7 @@
 (defn chega-em [hospital departamento pessoa]
   (if (cabe-na-fila? hospital departamento)
     (update hospital departamento conj pessoa)
-    (throw (ex-info "Nao cabe ninguem neste departamento." {:paciente pessoa}))))
+    (throw (ex-info "Nao cabe ninguem neste departamento." {:paciente pessoa :departamento departamento}))))
 
 (defn atende [hospital departamento]
   (update hospital departamento pop))
@@ -77,3 +77,6 @@
     (-> hospital
         (atende de)
         (chega-em para pessoa))))
+
+
+(transfere {:espera [1] :raio-x []} :espera :raio-x)

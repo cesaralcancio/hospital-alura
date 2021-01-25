@@ -55,10 +55,15 @@
       ; (is (nil? (chega-em {:espera [45 65 78 23 56]} :espera 80)))
 
       (is (= {:hospital hospital-cheio :resultado :error}
-             (chega-em-retorna-mapa {:espera [45 65 78 23 56]} :espera 80)))
+             (chega-em-retorna-mapa {:espera [45 65 78 23 56]} :espera 80))))))
 
+(deftest transfere-test
+  (testing "aceita pessoas se cabe")
+  (let [hospital-original {:espera [5] :raio-x []}]
+    (is (= {:espera [] :raio-x [5]}
+           (transfere hospital-original :espera :raio-x)))
 
+    )
+  (testing "recusa se nao couber")
+  )
 
-
-
-      )))
