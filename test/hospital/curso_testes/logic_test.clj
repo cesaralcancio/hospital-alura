@@ -1,7 +1,10 @@
 (ns hospital.curso-testes.logic-test
   (:require [clojure.test :refer :all]
-            [hospital.curso-testes.logic :refer :all]))
+            [hospital.curso-testes.logic :refer :all]
+            [hospital.curso-testes.model :refer :all]
+            [schema.core :as s]))
 
+(s/set-fn-validation! true)
 ; boundary tests
 ; exatamente na borda e one off: -1, +1, <=, >=, = .
 
@@ -58,12 +61,32 @@
              (chega-em-retorna-mapa {:espera [45 65 78 23 56]} :espera 80))))))
 
 (deftest transfere-test
-  (testing "aceita pessoas se cabe")
-  (let [hospital-original {:espera [5] :raio-x []}]
-    (is (= {:espera [] :raio-x [5]}
-           (transfere hospital-original :espera :raio-x)))
+  (testing "aceita a primeira pessoa da fila"
+    (let [hospital-original {:espera (conj empty-queue "65" "98" "78"), :raio-x (conj empty-queue "25")}
+          hospital-expected {:espera ["98", "78"], :raio-x ["25", "65"]}]
+      (is (= hospital-expected
+             (transfere hospital-original :espera :raio-x)))
+      ))
+  (testing "recusa se nao couber"
+    (let [hospital-cheio {:espera (conj empty-queue "54" "65" "98" "75" "23") :raio-x (conj empty-queue "15" "65" "98" "78" "32")}]
+      (is (thrown? clojure.lang.ExceptionInfo
+                   (transfere hospital-cheio :espera :raio-x)))
+      ))
 
+  ; faz sentido garantir o schema?
+  (testing "Nao pode invocar transferencia sem hospital"
+    (is (thrown? clojure.lang.ExceptionInfo (transfere nil :espera :sala1))))
+
+  (testing "condicoes obrigatorias"
+    (let [hospital {:espera (conj empty-queue "5") :raio-x (conj empty-queue "6")}]
+      (is (thrown? AssertionError
+                   (transfere hospital :nao-existe :raio-x)))
+      (is (thrown? AssertionError
+                   (transfere hospital :raio-x :nao-existe)))
+      )
     )
-  (testing "recusa se nao couber")
   )
 
+
+; testar todas a complexidades ciclomaticas?
+; testes de bordas?

@@ -1,4 +1,7 @@
-(ns hospital.curso-testes.logic)
+(ns hospital.curso-testes.logic
+  (:use clojure.pprint)
+  (:require [hospital.curso-testes.model :as m]
+            [schema.core :as s]))
 
 (defn cabe-na-fila? [fila]
   (> (alength fila) 5))
@@ -60,23 +63,31 @@
     (update hospital departamento conj pessoa)
     (throw (ex-info "Nao cabe ninguem neste departamento." {:paciente pessoa :departamento departamento}))))
 
-(defn atende [hospital departamento]
+(s/defn atende :- m/Hospital
+  [hospital :- m/Hospital, departamento :- s/Keyword]
   (update hospital departamento pop))
 
-(defn proximo-paciente
+(s/defn proximo-paciente :- m/PacienteID
   "Retorna o proximo paciente"
-  [hospital departamento]
+  [hospital :- m/Hospital departamento :- s/Keyword]
   (-> hospital
       departamento
       peek))
 
-(defn transfere
+(s/defn transfere :- m/Hospital
   "Transfere paciente da filas"
-  [hospital de para]
+  [hospital :- m/Hospital de :- s/Keyword para :- s/Keyword]
+  {
+   :pre  [(contains? hospital de) (contains? hospital para)]
+   :post [
+          (=
+            (+ (count (get hospital de)) (count (get hospital para)))
+            (+ (count (get % de)) (+ (count (get % para)) 0)))
+          ]
+   }
   (let [pessoa (proximo-paciente hospital de)]
     (-> hospital
         (atende de)
         (chega-em para pessoa))))
 
-
-(transfere {:espera [1] :raio-x []} :espera :raio-x)
+(pprint "Logic set up ok")
