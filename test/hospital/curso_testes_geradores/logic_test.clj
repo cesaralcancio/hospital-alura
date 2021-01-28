@@ -2,6 +2,7 @@
   (:require [clojure.test :refer :all]
             [hospital.curso-testes-geradores.logic :refer :all]
             [hospital.curso-testes-geradores.model :refer :all]
+            [clojure.test.check.generators :as gen]
             [schema.core :as s]))
 
 (s/set-fn-validation! true)
@@ -19,3 +20,12 @@
   (testing "Que a fila eh null"
     (is (not (cabe-na-fila? {:espera [1 2 3]} :raio-x)))
     ))
+
+
+
+(gen/sample gen/boolean 3)
+(gen/sample gen/int)
+(gen/sample gen/string)
+(gen/sample gen/string-alphanumeric)
+(gen/sample (gen/vector gen/small-integer 10))
+

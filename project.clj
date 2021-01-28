@@ -6,5 +6,6 @@
   :dependencies [
                  [org.clojure/clojure "1.10.0"]
                  [prismatic/schema "1.1.12"]
+                 [org.clojure/test.check "0.10.0"]
                  ]
   :repl-options {:init-ns hospital.core})
