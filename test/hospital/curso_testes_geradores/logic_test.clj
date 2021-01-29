@@ -82,11 +82,11 @@
 (defn transfere-ignorando-erro [hospital para]
   (try
     (let [novo-hospital (transfere hospital :espera para)]
-      (println "transferido com sucesso para " para)
+      ;(println "transferido com sucesso para " para)
       novo-hospital
       )
     (catch Exception e
-      (println "Exception: " (ex-data e))
+      ;(println "Exception: " (ex-data e))
       (cond
         (= :full-queue (-> e ex-data :type)) hospital
         :else (throw e)
@@ -102,10 +102,10 @@
      ultrasom fila-nao-cheia-gen
      vai-para (gen/vector (gen/elements [:raio-x :ultrasom]) 0 20)]
 
-    (println (count espera))
-    (println (count raio-x))
-    (println (count ultrasom))
-    (println (count vai-para))
+    ;(println (count espera))
+    ;(println (count raio-x))
+    ;(println (count ultrasom))
+    ;(println (count vai-para))
 
     (let [hospital-inicial {:espera espera :raio-x raio-x :ultrasom ultrasom}
           hospital-final (reduce transfere-ignorando-erro hospital-inicial vai-para)]
@@ -117,3 +117,38 @@
 
 
 
+(defn adiciona-fila-de-espera [[hospital fila]]
+  (assoc hospital :espera fila))
+
+(def hospital-gen
+  (gen/fmap adiciona-fila-de-espera
+            (gen/tuple (gen/not-empty (g/generator Hospital))
+                       fila-nao-cheia-gen)))
+
+(def chega-em-gen
+  "Gerador de chegadas no hospital"
+  (gen/tuple (gen/return chega-em)
+             (gen/return :espera)
+             nome-aleatorio-gen))
+
+(defn transfere-gen [hospital]
+  "Gerador de transferencias no hospital"
+  (let [departamentos (keys hospital)]
+    (gen/tuple (gen/return transfere)
+               (gen/elements departamentos)
+               (gen/elements departamentos))))
+
+(defn acao-gen [hospital]
+  (gen/one-of [chega-em-gen
+               (transfere-gen hospital)]))
+
+(defn acoes-gen [hospital]
+  (gen/not-empty (gen/vector (acao-gen hospital) 1 100)))
+
+(defspec
+  simula-um-dia-do-hospital-nao-perde-pessoas 10
+  (prop/for-all [hospital hospital-gen]
+                (let [acoes (gen/sample (acoes-gen hospital) 1)]
+                  (println acoes)
+                  true)
+                ))
