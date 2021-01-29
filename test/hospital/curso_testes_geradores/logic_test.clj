@@ -129,14 +129,16 @@
   "Gerador de chegadas no hospital"
   (gen/tuple (gen/return chega-em)
              (gen/return :espera)
-             nome-aleatorio-gen))
+             nome-aleatorio-gen
+             (gen/return 1)))
 
 (defn transfere-gen [hospital]
   "Gerador de transferencias no hospital"
   (let [departamentos (keys hospital)]
     (gen/tuple (gen/return transfere)
                (gen/elements departamentos)
-               (gen/elements departamentos))))
+               (gen/elements departamentos)
+               (gen/return 0))))
 
 (defn acao-gen [hospital]
   (gen/one-of [chega-em-gen
@@ -145,10 +147,32 @@
 (defn acoes-gen [hospital]
   (gen/not-empty (gen/vector (acao-gen hospital) 1 100)))
 
+(defn executa-uma-acao [situacao [funcao param1 param2 delta-se-sucesso]]
+  (let [hospital (:hospital situacao)
+        diferenca-atual (:delta situacao)]
+    (try
+      (let [hospital-novo (funcao hospital param1 param2)]
+        {:hospital hospital-novo
+         :delta    (+ delta-se-sucesso diferenca-atual)}
+        )
+      (catch Exception e
+        (cond
+          (= :full-queue (-> e ex-data :type)) hospital
+          :else (throw e)
+          )
+        situacao))))
+
 (defspec
   simula-um-dia-do-hospital-nao-perde-pessoas 10
-  (prop/for-all [hospital hospital-gen]
-                (let [acoes (gen/sample (acoes-gen hospital) 1)]
-                  (println acoes)
-                  true)
-                ))
+  (prop/for-all
+    [hospital-inicial hospital-gen]
+    (let [acoes (gen/generate (acoes-gen hospital-inicial))
+          situacao-inicial {:hospital hospital-inicial :delta 0}
+          total-de-pacientes-inicial (total-de-pacientes hospital-inicial)
+          situacao-final (reduce executa-uma-acao situacao-inicial acoes)
+          hospital-final (:hospital situacao-final)
+          total-de-pacientes-final (total-de-pacientes hospital-final)
+          delta-final (:delta situacao-final)
+          total-pacientes-com-chegados (+ total-de-pacientes-inicial delta-final)]
+      (is (= total-pacientes-com-chegados total-de-pacientes-final)))))
+
