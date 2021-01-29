@@ -13,13 +13,16 @@
 (defn chega-em [hospital departamento pessoa]
   (if (cabe-na-fila? hospital departamento)
     (update hospital departamento conj pessoa)
-    (throw (ex-info "Nao cabe ninguem neste departamento." {:paciente pessoa :departamento departamento}))))
+    (throw (ex-info "Nao cabe ninguem neste departamento."
+                    {:type         :full-queue
+                     :paciente     pessoa
+                     :departamento departamento}))))
 
 (s/defn atende :- m/Hospital
   [hospital :- m/Hospital, departamento :- s/Keyword]
   (update hospital departamento pop))
 
-(s/defn proximo-paciente :- m/PacienteID
+(s/defn proximo-paciente :- (s/maybe m/PacienteID)
   "Retorna o proximo paciente"
   [hospital :- m/Hospital departamento :- s/Keyword]
   (-> hospital
@@ -37,9 +40,10 @@
             (+ (count (get % de)) (+ (count (get % para)) 0)))
           ]
    }
-  (let [pessoa (proximo-paciente hospital de)]
+  (if-let [pessoa (proximo-paciente hospital de)]
     (-> hospital
         (atende de)
-        (chega-em para pessoa))))
+        (chega-em para pessoa))
+    hospital))
 
 (pprint "Logic set up ok")
