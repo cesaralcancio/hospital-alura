@@ -132,12 +132,17 @@
              nome-aleatorio-gen
              (gen/return 1)))
 
+(defn adiciona-inexistente-ao-departamento [departamento]
+  (keyword (str departamento "-inexistente")))
+
 (defn transfere-gen [hospital]
   "Gerador de transferencias no hospital"
-  (let [departamentos (keys hospital)]
+  (let [departamentos (keys hospital)
+        departamentos-inexistentes (map adiciona-inexistente-ao-departamento departamentos)
+        todos-os-departamentos (concat departamentos departamentos-inexistentes)]
     (gen/tuple (gen/return transfere)
-               (gen/elements departamentos)
-               (gen/elements departamentos)
+               (gen/elements todos-os-departamentos)
+               (gen/elements todos-os-departamentos)
                (gen/return 0))))
 
 (defn acao-gen [hospital]
@@ -160,6 +165,10 @@
           (= :full-queue (-> e ex-data :type)) hospital
           :else (throw e)
           )
+        situacao)
+      ; esse caso eh super especifico, caso de erro generico
+      ; tratando como se fosse erro especifico
+      (catch AssertionError e
         situacao))))
 
 (defspec
